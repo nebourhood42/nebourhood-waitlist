@@ -62,6 +62,7 @@ const ImageSection = () => {
          <div className="min-w-241.5 flex justify-center z-10">
             <Image
                src={generated_image_female}
+               loading="eager"
                alt="hero page female image"
                className="object-cover xl:w-screen"
             />

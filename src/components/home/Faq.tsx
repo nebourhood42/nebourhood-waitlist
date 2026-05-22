@@ -12,27 +12,27 @@ const Faq = () => {
       },
       {
          title: 'How does this differ from a typical tech "hustle" group?',
-         details: "We exist to provide a structural bridge between local ambition and the global tech labor market. Our goal is to take the confusion and frustration out of the digital transition by providing high-level guidance and insider knowledge to those who have the drive but lack the roadmap. We aren't just a community; we are a starting point for professional mobility.",
+         details: 'We do not promote "get-rich-quick" schemes or the "hustle" spirit. We believe in dignity, stability, and the steady acquisition of high-demand skills. While others focus on the noise of the streets, we focus on the standards of the global market—preparing you to compete at the highest level through composure and competence.',
          active: false
       },
       {
          title: 'Why is there a waitlist and a ranking system?',
-         details: "We exist to provide a structural bridge between local ambition and the global tech labor market. Our goal is to take the confusion and frustration out of the digital transition by providing high-level guidance and insider knowledge to those who have the drive but lack the roadmap. We aren't just a community; we are a starting point for professional mobility.",
+         details: `Quality mentorship requires structure. We grow in waves to ensure that every person who enters the 'Hood receives the attention and resources they need. The ranking system rewards those who help us build the community; it’s our way of identifying individuals who understand that looking out for the "neighborhood" is the best way to elevate everyone’s chances.`,
          active: false
       },
       {
          title: 'What exactly do I get as a member?',
-         details: "We exist to provide a structural bridge between local ambition and the global tech labor market. Our goal is to take the confusion and frustration out of the digital transition by providing high-level guidance and insider knowledge to those who have the drive but lack the roadmap. We aren't just a community; we are a starting point for professional mobility.",
+         details: `Membership grants you access to "The Blueprint"—our curated path of technical insights, career guidance, and community support. You will gain access to mentorship from those who have already successfully navigated the global market, as well as opportunities for portfolio audits, tool discounts, and direct referrals to hiring networks that are often gatekept.`,
          active: false
       },
       {
          title: 'Is The NebourHood only for experienced developers?',
-         details: "We exist to provide a structural bridge between local ambition and the global tech labor market. Our goal is to take the confusion and frustration out of the digital transition by providing high-level guidance and insider knowledge to those who have the drive but lack the roadmap. We aren't just a community; we are a starting point for professional mobility.",
+         details: `No. We are specifically built for those at a disadvantage—people who feel "left behind" by the fast-moving tech world. Whether you are just starting to explore a digital career or you are stuck in a cycle of confusion, we provide the foundational support needed to move from the sidelines to a professional career.`,
          active: false
       },
       {
          title: 'What is the long-term goal for a member?',
-         details: "We exist to provide a structural bridge between local ambition and the global tech labor market. Our goal is to take the confusion and frustration out of the digital transition by providing high-level guidance and insider knowledge to those who have the drive but lack the roadmap. We aren't just a community; we are a starting point for professional mobility.",
+         details: `Our success is measured by your mobility. We want to see you move from a place of digital uncertainty to a position of stability in the global tech economy. We provide the bridge; you provide the walk. Our goal is to ensure that your starting point doesn't dictate your destination.`,
          active: false
       },
    ])
