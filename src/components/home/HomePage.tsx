@@ -14,18 +14,10 @@ import nebourhood_abstract_mobile from '@/assets/vectors/nebourhood_abstract_mob
 import Faq from "./Faq";
 import Link from "next/link";
 import { Icon } from "@iconify-icon/react";
-import { signIn } from "next-auth/react";
 
 const contentMargin = 'mx-4 lg:mx-30'
 
 const HomePage = () => {
-
-  const [email, setEmail] = useState('')
-  const handleFormSubmission = (e: SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    console.log(email)
-    signIn("google")
-  }
 
   const socials = [
     {
@@ -61,10 +53,10 @@ const HomePage = () => {
           <p className="text-black/70 text-lg md:text-2xl text-center mx-auto w-4/5 lg:w-1/2 mb-18.5 lg:mb-10">
             We&apos;re building a space where complex tools become simple and opportunities are shared, not hidden. making sure you don&apos;t get left behind.
           </p>
-          <form onSubmit={handleFormSubmission} className="w-4/5 md:w-1/2 flex flex-col-reverse lg:flex-row gap-4 lg:gap-4.5 mx-auto text-xl">
-            <input className="bg-[#093645] py-4 px-7.5 rounded-full outline-0 cursor-pointer transform transition-transform duration-300 ease-in-out active:scale-90" type="submit" value="Join the Waitlist" />
-            <input value={email} onChange={e => setEmail(e.target.value)} className="bg-white/50 py-4 px-7.5 w-full rounded-full outline-0 text-[#093645]" type="email" required placeholder="Add email here" />
-          </form>
+          <div className="w-4/5 md:w-1/2 flex flex-col-reverse lg:flex-row gap-4 lg:gap-4.5 mx-auto text-xl">
+            <Link href="/auth/signup" className="bg-[#093645] flex-1 py-4 px-7.5 rounded-full outline-0 cursor-pointer transform transition-transform duration-300 ease-in-out active:scale-90">Join the Waitlist</Link>
+            <Link href="/auth/sigin" className="bg-white/50 flex-1 py-4 px-7.5 rounded-full outline-0 text-[#093645] cursor-pointer transform transition-transform duration-300 ease-in-out active:scale-90">Already Joined?</Link>
+          </div>
         </div>
       </aside>
 
