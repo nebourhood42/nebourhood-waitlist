@@ -25,3 +25,14 @@ body {
   color: var(--foreground);
   font-family: var(--font-lato), Arial, sans-serif; /* --font-lato is coming from Next.js's next/font, I'm referenc the CSS variable that Next.js injects */
 }
+
+.card-clipped {
+  clip-path: url(#card-shape-mobile);
+}
+
+@media (min-width: 768px) {
+  .card-clipped {
+    clip-path: url(#card-shape);
+  }
+}
+

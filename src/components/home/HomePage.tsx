@@ -5,7 +5,7 @@ import thrust_logo from '@/assets/vectors/thrust_logo.svg'
 import envsync_log from '@/assets/vectors/envsync.svg'
 import Image from "next/image"
 import ImageSection from "./ImageSection";
-import { SubmitEvent, useState } from "react";
+import { useEffect, useState } from "react";
 import GeneralStat from "./GeneralStat";
 import Leaderboard from "./Leaderboard";
 import Marquee from "react-fast-marquee";
@@ -14,10 +14,36 @@ import nebourhood_abstract_mobile from '@/assets/vectors/nebourhood_abstract_mob
 import Faq from "./Faq";
 import Link from "next/link";
 import { Icon } from "@iconify-icon/react";
+import { useAuth } from "@/context/AuthContext";
 
 const contentMargin = 'mx-4 lg:mx-30'
 
 const HomePage = () => {
+  const { user, logout } = useAuth();
+
+  useEffect(() => {
+    // Save referral code from URL if present
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get("ref");
+    if (ref) {
+      localStorage.setItem("waitlist_referred_by", ref);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Scroll to section if specified in sessionStorage (e.g. from welcome page close button)
+    const scrollTarget = sessionStorage.getItem('scrollTo');
+    if (scrollTarget) {
+      sessionStorage.removeItem('scrollTo');
+      const timer = setTimeout(() => {
+        const element = document.getElementById(scrollTarget);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 400);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   const socials = [
     {
@@ -54,8 +80,37 @@ const HomePage = () => {
             We&apos;re building a space where complex tools become simple and opportunities are shared, not hidden. making sure you don&apos;t get left behind.
           </p>
           <div className="w-4/5 md:w-1/2 flex flex-col-reverse lg:flex-row gap-4 lg:gap-4.5 mx-auto text-xl">
-            <Link href="/auth/signup" className="bg-[#093645] flex-1 py-4 px-7.5 rounded-full outline-0 cursor-pointer transform transition-transform duration-300 ease-in-out active:scale-90">Join the Waitlist</Link>
-            <Link href="/auth/sigin" className="bg-white/50 flex-1 py-4 px-7.5 rounded-full outline-0 text-[#093645] cursor-pointer transform transition-transform duration-300 ease-in-out active:scale-90">Already Joined?</Link>
+            {user ? (
+              <>
+                <button 
+                  onClick={logout} 
+                  className="bg-white/50 flex-1 py-4 px-7.5 rounded-full outline-0 text-[#093645] cursor-pointer text-center transform transition-transform duration-300 ease-in-out active:scale-90"
+                >
+                  Log Out
+                </button>
+                <Link 
+                  href="/welcome" 
+                  className="bg-[#093645] flex-1 py-4 px-7.5 rounded-full outline-0 text-white cursor-pointer text-center transform transition-transform duration-300 ease-in-out active:scale-90"
+                >
+                  View Welcome Card
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link 
+                  href="/auth/signup" 
+                  className="bg-[#093645] flex-1 py-4 px-7.5 rounded-full outline-0 text-white cursor-pointer text-center transform transition-transform duration-300 ease-in-out active:scale-90"
+                >
+                  Join the Waitlist
+                </Link>
+                <Link 
+                  href="/auth/signin" 
+                  className="bg-white/50 flex-1 py-4 px-7.5 rounded-full outline-0 text-[#093645] cursor-pointer text-center transform transition-transform duration-300 ease-in-out active:scale-90"
+                >
+                  Already Joined?
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </aside>
@@ -64,7 +119,9 @@ const HomePage = () => {
         <ImageSection />
       </aside>
 
-      <GeneralStat />
+      <div id="general-stats">
+        <GeneralStat />
+      </div>
       <Leaderboard />
 
       <div className="relative">
@@ -73,7 +130,7 @@ const HomePage = () => {
           <div className="pt-13 px-6 md:px-19 pb-12 md:pb-10">
             <h1 className="text-2xl md:text-4xl font-bold mb-3">Earn Your Spot</h1>
             <p className="text-lg md:text-xl">
-              This is where the "Neighborhood" becomes a powerhouse. We identify the most committed talent in our circle and integrate them into internal development teams, giving you the chance to gain high-level, production-grade experience on projects that actually scale.
+              This is where the &quot;Neighborhood&quot; becomes a powerhouse. We identify the most committed talent in our circle and integrate them into internal development teams, giving you the chance to gain high-level, production-grade experience on projects that actually scale.
             </p>
           </div>
           <Marquee

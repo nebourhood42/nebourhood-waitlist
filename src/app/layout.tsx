@@ -1,35 +1,26 @@
-import type { Metadata, Viewport } from "next";
-import { Lato } from "next/font/google";
+    import type { Metadata } from "next";
 import "./globals.css";
-
-const lato = Lato({
-  variable: "--font-lato",
-  weight: ['100', '300', '400', "700", "900"]
-});
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import ReactQueryProvider from "@/components/providers/ReactQueryProvider";
+import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata: Metadata = {
-  title: "Nebourhood",
-  description: "Nebourhood Waitlist",
+  title: "Nebourhood Waitlist",
+  description: "Join the Nebourhood waitlist",
 };
 
-export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-  userScalable: false
-}
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-       suppressHydrationWarning
-      className={`${lato.variable} antialiased scroll-smooth`}
-    >
-      <body>{children}</body>
+    <html lang="en">
+      <body>
+        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+          <ReactQueryProvider>
+            <AuthProvider>
+              {children}
+            </AuthProvider>
+          </ReactQueryProvider>
+        </GoogleOAuthProvider>
+      </body>
     </html>
   );
 }

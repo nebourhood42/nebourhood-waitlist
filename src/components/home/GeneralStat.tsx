@@ -1,15 +1,17 @@
 'use client';
 import useFormatTime from "@/hooks/useFormatTime";
 import { Icon } from "@iconify-icon/react";
-import { useEffect } from "react";
-
+import { useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 const GeneralStat = () => {
+   const { user } = useAuth();
    const Day = 24 * 60 * 60 * 1000 //24 hours
    const startDateStamp = 1779456386810
 
    // Start with 0 (same on server + client)
    const [timeRemaining, handleTimeRemaining] = useFormatTime(0);
+   const [copiedLink, setCopiedLink] = useState(false);
 
    useEffect(() => {
     const updateTimer = () => {
@@ -30,16 +32,34 @@ const GeneralStat = () => {
     return () => clearInterval(interval);
   }, []);
 
-   const position = {
-      "queue position": {
-         count: 100,
-         details: "You're in the first wave of early access."
-      },
-      "impact score": {
-         count: 1,
-         details: "You've added 1 Nebour to the Hood."
-      }
-   }
+  // Determine waitlist queue position based on referral counts
+  const getQueuePosition = (refCount: number) => {
+    if (refCount >= 15) return 1;
+    if (refCount >= 10) return 2;
+    if (refCount >= 5) return 3;
+    // For 0 to 4 referrals, position climbs as referrals increase
+    return 100 - refCount * 18; 
+  };
+
+  const referralCount = user ? user.referral_count : 0;
+  const queuePos = user ? getQueuePosition(referralCount) : 100;
+
+  const position = {
+     "queue position": {
+        count: queuePos,
+        details: user 
+          ? (queuePos <= 3 
+              ? `Congratulations! You're in the top ${queuePos} spot.` 
+              : "You're in the first wave of early access.")
+          : "Sign up to claim your queue position."
+     },
+     "impact score": {
+        count: referralCount,
+        details: user 
+          ? `You've added ${referralCount} ${referralCount === 1 ? 'Nebour' : 'Nebours'} to the Hood.`
+          : "Invite colleagues to increase your impact score."
+     }
+  }
 
    const share_on_socials = {
       linkedin: {
@@ -58,11 +78,54 @@ const GeneralStat = () => {
          icon: 'logos:telegram'
       }
    }
+
+   const handleCopyLink = () => {
+      if (user?.referral_code) {
+         const refLink = `${window.location.origin}/?ref=${user.referral_code}`;
+         navigator.clipboard.writeText(refLink);
+         setCopiedLink(true);
+         setTimeout(() => setCopiedLink(false), 2000);
+      } else {
+         alert("Please sign up or sign in to copy your unique referral link.");
+      }
+   }
+
+   const handleShareSocial = (platform: string) => {
+      if (!user?.referral_code) {
+         alert("Please sign up or sign in to share your referral link.");
+         return;
+      }
+      const refLink = encodeURIComponent(`${window.location.origin}/?ref=${user.referral_code}`);
+      const text = encodeURIComponent("Join me on the Nebourhood Waitlist! Let's find our place in tech.");
+      let url = "";
+
+      switch (platform) {
+         case "x":
+            url = `https://x.com/intent/tweet?text=${text}&url=${refLink}`;
+            break;
+         case "facebook":
+            url = `https://www.facebook.com/sharer/sharer.php?u=${refLink}`;
+            break;
+         case "linkedin":
+            url = `https://www.linkedin.com/sharing/share-offsite/?url=${refLink}`;
+            break;
+         case "telegram":
+            url = `https://t.me/share/url?url=${refLink}&text=${text}`;
+            break;
+         default:
+            // Fallback copy
+            navigator.clipboard.writeText(`${window.location.origin}/?ref=${user.referral_code}`);
+            alert("Referral link copied to clipboard!");
+            return;
+      }
+      window.open(url, "_blank");
+   };
+
    return (
       <aside className="py-25 lg:pt-35 lg:pb-40 bg-[#093645]">
          <div className="max-w-200 mx-auto">
             <div className="mb-20">
-               <h1 className="text-center text-[35px] md:text-[55px] font-extrabold text-white">General Starts</h1>
+               <h1 className="text-center text-[35px] md:text-[55px] font-extrabold text-white">General Stats</h1>
                <p className="text-center w-11/12 md:w-4/5 mx-auto text-[18px] text-foreground/60 md:text-2xl">A shared opportunity is a doubled chance. Introduce one colleague to the community and move up 50 spots instantly. We prioritize those who look out for others.</p>
             </div>
 
@@ -89,9 +152,12 @@ const GeneralStat = () => {
             </div>
 
             <div className="flex justify-between items-center bg-foreground text-black text-xl md:text-2xl rounded-[40px] px-7.5 py-4 md:p-7.5 mx-4 md:mx-0 mb-4.5 md:mb-7.5">
-               <p>Copy your unique invite link</p>
-               <button className="cursor-pointer outline-0 transform transform-3d transition-transform duration-300 ease-in-out hover:transform-[rotateZ(-45deg)] hover:scale-125 active:transform-[rotateZ(-45deg)] active:scale-90">
-                  <Icon icon="nimbus:copy" width="24" height="24" className="text-black" />
+               <p>{copiedLink ? "Link copied successfully!" : "Copy your unique invite link"}</p>
+               <button 
+                  onClick={handleCopyLink}
+                  className="cursor-pointer outline-0 transform transform-3d transition-transform duration-300 ease-in-out hover:transform-[rotateZ(-45deg)] hover:scale-125 active:transform-[rotateZ(-45deg)] active:scale-90"
+               >
+                  <Icon icon={copiedLink ? "carbon:checkmark-filled" : "nimbus:copy"} width="24" height="24" className="text-black" />
                </button>
             </div>
 
@@ -99,7 +165,11 @@ const GeneralStat = () => {
 
             <div className="flex gap-4.5 lg:gap-5 flex-wrap justify-center mx-4 md:mx-0">
                {Object.entries(share_on_socials).map(([key, value]) => (
-                  <button key={key} className="min-w-35 py-2.5 px-5 rounded-[30px] bg-foreground flex items-center gap-2.5 cursor-pointer outline-0 transform transition-transform duration-300 ease-in-out hover:scale-125 active:scale-90">
+                  <button 
+                     onClick={() => handleShareSocial(key)}
+                     key={key} 
+                     className="min-w-35 py-2.5 px-5 rounded-[30px] bg-foreground flex items-center gap-2.5 cursor-pointer outline-0 transform transition-transform duration-300 ease-in-out hover:scale-125 active:scale-90"
+                  >
                      <span><Icon icon={value.icon} width={24} height={24} className={key === 'x' ? 'invert' : ''} /></span>
                      <span className="capitalize text-lg text-[#093645]">{key}</span>
                   </button>
@@ -110,4 +180,4 @@ const GeneralStat = () => {
    )
 }
 
-export default GeneralStat
+export default GeneralStat;

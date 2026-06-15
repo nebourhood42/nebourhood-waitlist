@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 const useFormatTime = (ms: number = 0, isTimeStamp: boolean = false) => {
    // ms = isTimeStamp ? ms - Date.now() : ms;
-   const [timer, setTimer] = useState(isTimeStamp && ms ? ms - Date.now() : ms)
+   const [timer, setTimer] = useState(() => isTimeStamp && ms ? ms - Date.now() : ms)
 
    const handleTimer = (ms: number) => { setTimer(ms) }
 
@@ -20,7 +20,7 @@ const useFormatTime = (ms: number = 0, isTimeStamp: boolean = false) => {
 
    const time = {
       days: days.toString().padStart(2, '0'),
-      hours: hours.toString().padStart(2, '00'),
+      hours: hours.toString().padStart(2, '0'),
       minutes: minutes.toString().padStart(2, '0'),
       seconds: seconds.toString().padStart(2, '0'),
    }
