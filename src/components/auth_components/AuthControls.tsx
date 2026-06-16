@@ -29,7 +29,7 @@ const AuthControls = ({ role }: { role: "signin" | "signup" }) => {
         if (role === "signup") {
           const referralCode = localStorage.getItem("waitlist_referred_by");
           await signupWithGoogle(idToken, referralCode);
-          router.push("/welcome");
+          router.push("/onboarding");
         } else {
           await signinWithGoogle(idToken);
           router.push("/");

@@ -79,7 +79,7 @@ const AuthLayout = ({role}: {role: 'signin' | 'signup'}) => {
           <AuthErrorBanner />
         </Suspense>
         <AuthControls role={role} />
-      </div>
+      </div>        
 
       {role == "signup" && (
         <p className="relative z-10 text-center font-bold text-xl mt-8 md:mt-16">

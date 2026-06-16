@@ -12,9 +12,16 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('waitlist_token');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+      const sessionStr = localStorage.getItem('auth_session');
+      if (sessionStr) {
+        try {
+          const session = JSON.parse(sessionStr);
+          if (session && session.token) {
+            config.headers.Authorization = `Bearer ${session.token}`;
+          }
+        } catch (err) {
+          console.error('Failed to parse auth_session from localStorage:', err);
+        }
       }
     }
     return config;

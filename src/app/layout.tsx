@@ -3,6 +3,13 @@ import "./globals.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import ReactQueryProvider from "@/components/providers/ReactQueryProvider";
 import { AuthProvider } from "@/context/AuthContext";
+import { Lato } from "next/font/google"
+
+
+const lato = Lato({
+  subsets: ['latin'],
+  weight: ['100', '300', '400', '700', '900'],
+})
 
 export const metadata: Metadata = {
   title: "Nebourhood Waitlist",
@@ -12,7 +19,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>
+      <body className={lato.className}>
         <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
           <ReactQueryProvider>
             <AuthProvider>

@@ -6,31 +6,30 @@ import { useAuth } from "@/context/AuthContext";
 
 const GeneralStat = () => {
    const { user } = useAuth();
-   const Day = 24 * 60 * 60 * 1000 //24 hours
-   const startDateStamp = 1779456386810
+    const targetDateStamp = 1784073600000; // July 15, 2026 UTC
 
-   // Start with 0 (same on server + client)
-   const [timeRemaining, handleTimeRemaining] = useFormatTime(0);
-   const [copiedLink, setCopiedLink] = useState(false);
+    // Start with 0 (same on server + client)
+    const [timeRemaining, handleTimeRemaining] = useFormatTime(0);
+    const [copiedLink, setCopiedLink] = useState(false);
 
-   useEffect(() => {
-    const updateTimer = () => {
-      const remaining = (startDateStamp + 20 * Day) - Date.now();
+    useEffect(() => {
+     const updateTimer = () => {
+       const remaining = targetDateStamp - Date.now();
 
-      if (remaining <= 0) {
-        handleTimeRemaining(0);
-        return;
-      }
+       if (remaining <= 0) {
+         handleTimeRemaining(0);
+         return;
+       }
 
-      handleTimeRemaining(remaining);
-    };
+       handleTimeRemaining(remaining);
+     };
 
-    updateTimer(); // run immediately after mount
+     updateTimer(); // run immediately after mount
 
-    const interval = setInterval(updateTimer, 1000);
+     const interval = setInterval(updateTimer, 1000);
 
-    return () => clearInterval(interval);
-  }, []);
+     return () => clearInterval(interval);
+   }, []);
 
   // Determine waitlist queue position based on referral counts
   const getQueuePosition = (refCount: number) => {
